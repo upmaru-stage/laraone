@@ -52,7 +52,7 @@ build:
 run:
   commands:
     - binary: php
-      call: artisan migrate --no-interaction
+      call: artisan migrate --force --no-interaction
       name: migrate
       path: /usr/bin
     - binary: php
@@ -109,6 +109,6 @@ kits:
           length: 32
         key: APP_KEY
       - driver: database/postgresql
-        key: DB
+        key: DATABASE
       - default_value: pgsql
         key: DB_CONNECTION
