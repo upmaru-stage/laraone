@@ -26,6 +26,7 @@ dependencies:
     - jq
     - ca-certificates
     - php82-pgsql
+    - php82-pdo_pgsql
     - laraone-openrc
 
 stack: alpine/3.19
@@ -51,12 +52,15 @@ build:
 run:
   commands:
     - binary: php
-      call: artisan migrate
+      call: artisan migrate --no-interaction
       name: migrate
       path: /usr/bin
     - binary: php
       call: artisan tinker
       name: console
+      path: /usr/bin
+    - binary: php
+      call: artisan config:cache
       path: /usr/bin
     - binary: tail
       call: -f -n 100 /var/log/laraone/current
@@ -76,8 +80,10 @@ hook:
     rc-update del laraone
   post-install: |
     rc-update add laraone
+    rc-service laraone configure
     rc-service laraone migrate
   post-upgrade: |
+    rc-service laraone configure
     rc-service laraone migrate
     rc-service laraone start
   pre-upgrade: |
