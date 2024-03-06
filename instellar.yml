@@ -61,6 +61,7 @@ run:
       path: /usr/bin
     - binary: php
       call: artisan config:cache
+      name: configure
       path: /usr/bin
     - binary: tail
       call: -f -n 100 /var/log/laraone/current
