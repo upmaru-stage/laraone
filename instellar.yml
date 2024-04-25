@@ -32,6 +32,7 @@ dependencies:
 stack: alpine/3.19
 
 build:
+  strip_binary: false
   command: |
     export APP_ENV=production
     export APP_DEBUG=false
