@@ -31,24 +31,20 @@ dependencies:
 
 stack: alpine/3.19
 
-build:
-  strip_binary: false
-  command: |
-    export APP_ENV=production
-    export APP_DEBUG=false
-
-    composer install --optimize-autoloader --no-dev
-    php artisan octane:install --server=frankenphp --no-interaction
-    php artisan config:cache
-    php artisan event:cache
-    php artisan route:cache
-    php artisan view:cache
-    php artisan optimize
-
-    npm install
-    npm run build
-  destinations:
-    - '*'
+hook:
+  post-deinstall: |
+    rc-service laraone stop
+    rc-update del laraone
+  post-install: |
+    rc-update add laraone
+    rc-service laraone configure
+    rc-service laraone migrate
+  post-upgrade: |
+    rc-service laraone configure
+    rc-service laraone migrate
+    rc-service laraone start
+  pre-upgrade: |
+    rc-service laraone stop
 
 run:
   commands:
@@ -76,20 +72,24 @@ run:
       start:
         call: artisan octane:start --server=frankenphp
 
-hook:
-  post-deinstall: |
-    rc-service laraone stop
-    rc-update del laraone
-  post-install: |
-    rc-update add laraone
-    rc-service laraone configure
-    rc-service laraone migrate
-  post-upgrade: |
-    rc-service laraone configure
-    rc-service laraone migrate
-    rc-service laraone start
-  pre-upgrade: |
-    rc-service laraone stop
+build:
+  command: |
+    export APP_ENV=production
+    export APP_DEBUG=false
+
+    composer install --optimize-autoloader --no-dev
+    php artisan octane:install --server=frankenphp --no-interaction
+    php artisan config:cache
+    php artisan event:cache
+    php artisan route:cache
+    php artisan view:cache
+    php artisan optimize
+
+    npm install
+    npm run build
+  destinations:
+    - '*'
+  strip_binary: false
 
 kits:
   - description: web service
