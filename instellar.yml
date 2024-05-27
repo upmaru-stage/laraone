@@ -95,6 +95,11 @@ kits:
   - description: web service
     main: true
     name: web
+    orchestration:
+      upgrade: patch
+      on_fail: restart
+      placement: spread
+      delivery: manual
     ports:
       - main: true
         name: web
