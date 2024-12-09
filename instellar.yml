@@ -49,7 +49,7 @@ hook:
 run:
   commands:
     - binary: php
-      call: artisan migrate --force --no-interaction
+      call: artisan migrate --no-interaction
       name: migrate
       path: /usr/bin
     - binary: php
